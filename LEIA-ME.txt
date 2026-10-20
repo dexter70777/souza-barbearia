@@ -1,0 +1,26 @@
+SOUZA BARBEARIA — NETLIFY (SEM SUPABASE/FIREBASE)
+
+ESTRUTURA
+- public/index.html: site do cliente, catálogo com 12 serviços e imagens incorporadas
+- public/admin.html: painel administrativo
+- netlify/functions/bookings.mjs: grava pedidos no Netlify Blobs
+- netlify/functions/booking-status.mjs: consulta status pelo código e telefone
+- netlify/functions/admin-bookings.mjs: lista e atualiza pedidos protegidos por token
+- netlify.toml: configuração de build e funções
+
+CONFIGURAÇÃO OBRIGATÓRIA PARA FUNCIONAR ONLINE
+1. Publique a pasta do projeto via repositório Git conectado ao Netlify (recomendado) ou Netlify CLI. Deploy manual estático não executa funções.
+2. No Netlify, em Site configuration > Environment variables, adicione:
+   ADMIN_TOKEN = uma senha/token forte e exclusivo (não compartilhe com clientes).
+3. O pacote usa @netlify/blobs e precisa instalar dependências durante o build (package.json).
+4. O armazenamento Netlify Blobs é criado/acessado pelas funções. Se sua conta/plano exigir habilitação de Blobs ou configuração adicional, ative-a no painel.
+5. Após publicar, abra /admin.html e entre com o valor de ADMIN_TOKEN.
+6. O cliente envia o pedido no site, recebe um código SB-XXXXXXXX e consulta em “Consultar agendamento”. Admin confirma ou recusa.
+7. A consulta do cliente exige o código e o mesmo telefone informado no pedido.
+
+SEGURANÇA E LIMITAÇÕES
+- Nunca coloque ADMIN_TOKEN no HTML público.
+- Esta versão protege o painel com variável de ambiente, não tem login de usuários separado.
+- O código registra pedidos, mas ainda não bloqueia dois pedidos para a mesma data/hora. Antes de uso real, é necessário adicionar validação de disponibilidade/horário no servidor e definir horário de funcionamento, duração de cada serviço e política de sobreposição.
+- Os pedidos não são enviados ao WhatsApp.
+- Sem deploy das funções no Netlify, a submissão de agendamento não funcionará. Abrir index.html diretamente no celular não executa as funções.
